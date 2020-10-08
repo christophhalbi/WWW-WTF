@@ -15,13 +15,7 @@ foreach my $http_resource (@http_resources) {
 
     my @links = $http_resource->get_links();
 
-    foreach my $link (@links) {
-
-        is(
-            $link->scheme, 'https',
-            "URL " . $link . ' is HTTPS (found on ' . $ua->uri .')',
-        );
-    }
+    is(scalar @links, 1);
 }
 
 done_testing();
