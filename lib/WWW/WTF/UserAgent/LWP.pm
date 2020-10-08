@@ -4,6 +4,8 @@ use common::sense;
 
 use Moose;
 
+use Cache::FastMmap;
+use Digest::SHA qw(sha1_hex);
 use LWP::UserAgent;
 
 use WWW::WTF::HTTPResource;
@@ -20,12 +22,36 @@ has 'ua' => (
     },
 );
 
+has 'cache' => (
+    is      => 'ro',
+    isa     => 'Maybe[Cache::FastMmap]',
+    lazy    => 1,
+    default => sub {
+
+        return unless $ENV{WTF_CACHE};
+
+        return Cache::FastMmap->new( share_file => $ENV{WTF_CACHE}, unlink_on_exit => 0 );
+    },
+);
+
 sub get {
     my ($self, $uri) = @_;
 
     confess "$uri is not an URI object" unless (ref($uri) =~ /^URI::https?$/);
 
-    my $response = $self->ua->get($uri->as_string);
+    my $response;
+
+    my $checksum = sha1_hex($uri);
+
+    if ($self->cache) {
+        $response = $self->cache->get("get/$checksum");
+    }
+
+    unless ($response) {
+        $response = $self->ua->get($uri->as_string);
+
+        $self->cache->set("get/$checksum", $response) if $self->cache;
+    }
 
     return $response;
 }
