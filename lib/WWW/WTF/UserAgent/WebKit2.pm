@@ -5,19 +5,29 @@ use common::sense;
 use Moose;
 
 use HTTP::Headers;
-use WWW::WebKit2;
 
 use WWW::WTF::HTTPResource;
+use WWW::WTF::UserAgent::WebKit2::Browser;
 
 extends 'WWW::WTF::UserAgent';
 
 has 'ua' => (
     is      => 'ro',
-    isa     => 'WWW::WebKit2',
+    isa     => 'WWW::WTF::UserAgent::WebKit2::Browser',
     lazy    => 1,
     default => sub {
 
-        my $wkit = WWW::WebKit2->new();
+        my $wkit = WWW::WTF::UserAgent::WebKit2::Browser->new(
+            callbacks => {
+                handle_resource_request => sub {
+                    my ($view, $resource, $request) = @_;
+
+                    use Test::More;
+
+                    ok($request->get_uri, $request->get_uri); # WIP
+                }
+            }
+        );
 
         $wkit->init;
 
