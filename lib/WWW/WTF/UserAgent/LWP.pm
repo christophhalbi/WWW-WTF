@@ -39,21 +39,26 @@ sub get {
 
     confess "$uri is not an URI object" unless (ref($uri) =~ /^URI::https?$/);
 
-    my $response;
+    my $http_resource;
 
     my $checksum = sha1_hex($uri);
 
     if ($self->cache) {
-        $response = $self->cache->get("get/$checksum");
+        $http_resource = $self->cache->get("get/$checksum");
     }
 
-    unless ($response) {
-        $response = $self->ua->get($uri->as_string);
+    unless ($http_resource) {
+        my $response = $self->ua->get($uri->as_string);
 
-        $self->cache->set("get/$checksum", $response) if $self->cache;
+        $http_resource = WWW::WTF::HTTPResource->new(
+            headers => $response->headers,
+            content => $response->content,
+        );
+
+        $self->cache->set("get/$checksum", $http_resource) if $self->cache;
     }
 
-    return $response;
+    return $http_resource;
 }
 
 sub recurse {
