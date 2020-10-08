@@ -9,6 +9,7 @@ use Digest::SHA qw(sha1_hex);
 use LWP::UserAgent;
 
 use WWW::WTF::HTTPResource;
+use WWW::WTF::UserAgent::LWP::Iterator;
 
 extends 'WWW::WTF::UserAgent';
 
@@ -62,22 +63,11 @@ sub get {
 }
 
 sub recurse {
-    my ($self, $uri) = @_;
+    my ($self, $sitemap_uri) = @_;
 
-    confess "$uri is not an URI object" unless (ref($uri) =~ /^URI::https?$/);
+    confess "$sitemap_uri is not an URI object" unless (ref($sitemap_uri) =~ /^URI::https?$/);
 
-    my $response = $self->get($uri);
-
-    my @http_resources;
-
-    my $http_resource = WWW::WTF::HTTPResource->new(
-        headers => $response->headers,
-        content => $response->content,
-    );
-
-    push @http_resources, $http_resource;
-
-    return @http_resources;
+    return WWW::WTF::UserAgent::LWP::Iterator->new( sitemap_uri => $sitemap_uri, ua => $self );
 }
 
 __PACKAGE__->meta->make_immutable;
