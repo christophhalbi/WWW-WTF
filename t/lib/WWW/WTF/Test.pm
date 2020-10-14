@@ -1,15 +1,21 @@
-package WWW::WTF::Testserver;
+package WWW::WTF::Test;
 use Moose;
 use common::sense;
 
-use URI;
+use Test2::V0 '!meta';
 
 use Plack::Test;
 use Plack::App::File;
 $Plack::Test::Impl = 'Server';
 
+use URI;
+
+use WWW::WTF::UserAgent::LWP;
+use WWW::WTF::UserAgent::WebKit2;
+
 use namespace::autoclean;
 
+#Testserver to host the static files
 has 'server' => (
     is      => 'ro',
     isa     => 'Plack::Test::Server',
@@ -28,10 +34,32 @@ has 'base_uri' => (
     },
 );
 
+
+#User Agent
+has 'ua_lwp' => (
+    is      => 'ro',
+    isa     => 'WWW::WTF::UserAgent::LWP',
+    default => sub { WWW::WTF::UserAgent::LWP->new(); },
+);
+
+has 'ua_webkit2' => (
+    is      => 'ro',
+    isa     => 'WWW::WTF::UserAgent::WebKit2',
+    default => sub { WWW::WTF::UserAgent::WebKit2->new(); },
+);
+
+
+#Helpers
 sub uri_for {
     my ($self, $target) = @_;
 
     return URI->new($self->base_uri . $target);
+}
+
+sub run_test {
+    my ($self, $test) = @_;
+
+    $test->($self);
 }
 
 __PACKAGE__->meta->make_immutable;
