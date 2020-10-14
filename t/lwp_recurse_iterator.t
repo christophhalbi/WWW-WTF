@@ -1,23 +1,22 @@
-
-use common::sense;
-
+use FindBin;
+use lib "$FindBin::Bin/lib";
 use Test2::V0 '!meta';
+use WWW::WTF::Test;
 
-use URI;
+my $test = WWW::WTF::Test->new();
 
-use WWW::WTF::UserAgent::LWP;
+$test->run_test(sub {
+    my ($self) = @_;
 
-my $ua = WWW::WTF::UserAgent::LWP->new;
+    my $iterator = $self->ua_lwp->recurse($self->uri_for('/sitemap.xml'));
 
-my $iterator = $ua->recurse(URI->new('http://hqvm-beta-1.atikon.io:9999/sitemap.xml'));
+    my @http_resources;
 
-my @http_resources;
+    while (my $http_resource = $iterator->next) {
+        push @http_resources, $http_resource;
+    }
 
-while (my $http_resource = $iterator->next) {
-
-    push @http_resources, $http_resource;
-}
-
-is(scalar @http_resources, 2, 'iterator worked');
+    is(scalar @http_resources, 2, 'iterator worked');
+});
 
 done_testing();
