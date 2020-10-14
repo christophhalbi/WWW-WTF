@@ -1,18 +1,18 @@
-
-use common::sense;
-
+use FindBin;
+use lib "$FindBin::Bin/lib";
 use Test2::V0 '!meta';
+use WWW::WTF::Test;
 
-use URI;
+my $test = WWW::WTF::Test->new();
 
-use WWW::WTF::UserAgent::WebKit2;
+$test->run_test(sub {
+    my ($self) = @_;
 
-my $ua = WWW::WTF::UserAgent::WebKit2->new;
+    my $http_resource = $self->ua_webkit2->get($self->uri_for('/index.html'));
 
-my $http_resource = $ua->get(URI->new('http://hqvm-beta-1.atikon.io:9999/index.html'));
+    my @links = $http_resource->get_links();
 
-my @links = $http_resource->get_links();
-
-is(scalar @links, 1);
+    is(scalar @links, 1);
+});
 
 done_testing();
