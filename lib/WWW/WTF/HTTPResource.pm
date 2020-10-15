@@ -18,6 +18,13 @@ has 'content' => (
     required => 1,
 );
 
+has 'successfull' => (
+    is       => 'ro',
+    isa      => 'Bool',
+    required => 1,
+);
+
+
 #FIXME this is rather ugly. we need a good solution to get
 #information from a Moose::Role so they can self-register here
 has 'content_types' => (

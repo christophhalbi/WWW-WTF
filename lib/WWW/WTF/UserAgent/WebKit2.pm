@@ -48,8 +48,9 @@ sub get {
     my $response = $resource->get_response;
 
     my $http_resource = WWW::WTF::HTTPResource->new(
-        headers => HTTP::Headers->new( Content_Type => $response->get_mime_type ),
-        content => $self->ua->get_html_source,
+        headers     => HTTP::Headers->new( Content_Type => $response->get_mime_type ),
+        content     => $self->ua->get_html_source,
+        successfull => ($response->get_status_code =~ m/^2\d\d$/ ? 1 : 0),
     );
 
     return $http_resource;
