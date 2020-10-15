@@ -17,23 +17,21 @@ has 'ua' => (
     isa     => 'WWW::WTF::UserAgent::WebKit2::Browser',
     lazy    => 1,
     default => sub {
+        my $self = shift;
 
-        my $wkit = WWW::WTF::UserAgent::WebKit2::Browser->new(
-            callbacks => {
-                handle_resource_request => sub {
-                    my ($view, $resource, $request) = @_;
-
-                    use Test::More;
-
-                    ok($request->get_uri, $request->get_uri); # WIP
-                }
-            }
-        );
+        my $wkit = WWW::WTF::UserAgent::WebKit2::Browser->new( callbacks => $self->callbacks );
 
         $wkit->init;
 
         return $wkit;
     },
+);
+
+has 'callbacks' => (
+    is      => 'ro',
+    isa     => 'HashRef',
+    lazy    => 1,
+    default => sub { {} },
 );
 
 sub get {
