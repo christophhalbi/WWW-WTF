@@ -8,6 +8,7 @@ use HTTP::Headers;
 
 use WWW::WTF::HTTPResource;
 use WWW::WTF::UserAgent::WebKit2::Browser;
+use WWW::WTF::UserAgent::WebKit2::Iterator;
 
 extends 'WWW::WTF::UserAgent';
 
@@ -52,6 +53,14 @@ sub get {
     );
 
     return $http_resource;
+}
+
+sub recurse {
+    my ($self, $sitemap_uri) = @_;
+
+    confess "$sitemap_uri is not an URI object" unless (ref($sitemap_uri) =~ /^URI::https?$/);
+
+    return WWW::WTF::UserAgent::WebKit2::Iterator->new( sitemap_uri => $sitemap_uri, ua => $self );
 }
 
 __PACKAGE__->meta->make_immutable;

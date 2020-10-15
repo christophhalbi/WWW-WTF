@@ -1,4 +1,4 @@
-package WWW::WTF::UserAgent::LWP::Iterator;
+package WWW::WTF::UserAgent::WebKit2::Iterator;
 
 use common::sense;
 
@@ -10,7 +10,7 @@ with 'WWW::WTF::UserAgent::Role::Iterator';
 
 has 'ua' => (
     is       => 'ro',
-    isa      => 'WWW::WTF::UserAgent::LWP',
+    isa      => 'WWW::WTF::UserAgent::WebKit2',
     required => 1,
 );
 
