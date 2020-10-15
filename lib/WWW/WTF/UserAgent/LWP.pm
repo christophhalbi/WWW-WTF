@@ -52,8 +52,9 @@ sub get {
         my $response = $self->ua->get($uri->as_string);
 
         $http_resource = WWW::WTF::HTTPResource->new(
-            headers => $response->headers,
-            content => $response->content,
+            headers     => $response->headers,
+            content     => $response->content,
+            successfull => ($response->is_success ? 1 : 0),
         );
 
         $self->cache->set("get/$checksum", $http_resource) if $self->cache;
