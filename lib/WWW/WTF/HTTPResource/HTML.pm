@@ -6,16 +6,26 @@ use Moose::Role;
 
 use HTML::TokeParser;
 
-my $types = 'foo';
+has 'parser' => (
+    is      => 'ro',
+    isa     => 'HTML::TokeParser',
+    lazy    => 1,
+    default => sub {
+        my ($self) = @_;
+        my $parser = HTML::TokeParser->new(\$self->content) or die "Can't parse: $!";
+        return $parser;
+    },
+);
 
 sub get_links {
-    my $self = shift;
+    my ($self, $o) = @_;
 
     my @links;
 
-    my $parser = HTML::TokeParser->new(\$self->content) or die "Can't parse: $!";
-
-    while (my $token = $parser->get_tag(qw/a/)) {
+    while (my $token = $self->parser->get_tag(qw/a/)) {
+        if (exists $o->{filter}->{title}) {
+            next unless(($token->[1]->{title} // '') =~ m/$o->{filter}->{title}/);
+        }
 
         push @links, URI->new($token->[1]->{href});
     }

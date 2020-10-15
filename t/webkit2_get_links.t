@@ -12,7 +12,7 @@ $test->run_test(sub {
 
     my @links = $http_resource->get_links();
 
-    is(scalar @links, 1);
+    is(scalar @links, 2);
 });
 
 done_testing();
