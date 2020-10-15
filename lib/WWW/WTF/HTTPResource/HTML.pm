@@ -1,10 +1,12 @@
-package WWW::WTF::HTTPResource::Texthtml;
+package WWW::WTF::HTTPResource::HTML;
 
 use common::sense;
 
 use Moose::Role;
 
 use HTML::TokeParser;
+
+my $types = 'foo';
 
 sub get_links {
     my $self = shift;

@@ -18,16 +18,31 @@ has 'content' => (
     required => 1,
 );
 
+#FIXME this is rather ugly. we need a good solution to get
+#information from a Moose::Role so they can self-register here
+has 'content_types' => (
+    is       => 'ro',
+    isa      => 'HashRef',
+    required => 1,
+    default  => sub {
+        {
+            'text/html'         => 'HTML',
+            'text/plain'        => 'Plaintext',
+            'text/xml'          => 'XML',
+            'application/xml'   => 'XML',
+        }
+    },
+);
+
 sub BUILD {
     my $self = shift;
 
-    my $content_type = $self->headers->content_type;
+    my $content_type = lc($self->headers->content_type);
 
-    $content_type =~ s/[^\w]//gm;
+    die("Unsupported content type $content_type")
+        unless exists $self->content_types->{$content_type};
 
-    $content_type = ucfirst $content_type;
-
-    Moose::Util::apply_all_roles($self, 'WWW::WTF::HTTPResource::' . $content_type);
+    Moose::Util::apply_all_roles($self, 'WWW::WTF::HTTPResource::' . $self->content_types->{$content_type});
 }
 
 sub get_links { ... }

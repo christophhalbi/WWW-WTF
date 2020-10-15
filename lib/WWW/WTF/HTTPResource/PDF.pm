@@ -1,4 +1,4 @@
-package WWW::WTF::HTTPResource::SVG;
+package WWW::WTF::HTTPResource::PDF;
 
 use common::sense;
 

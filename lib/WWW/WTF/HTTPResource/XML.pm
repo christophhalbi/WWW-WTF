@@ -1,4 +1,4 @@
-package WWW::WTF::HTTPResource::Textxml;
+package WWW::WTF::HTTPResource::XML;
 
 use common::sense;
 
