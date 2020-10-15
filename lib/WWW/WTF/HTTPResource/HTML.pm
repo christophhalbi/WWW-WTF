@@ -33,4 +33,21 @@ sub get_links {
     return @links;
 }
 
+sub get_image_uris {
+    my ($self, $o) = @_;
+
+    my @links;
+
+    while (my $token = $self->parser->get_tag(qw/img/)) {
+        if (exists $o->{filter}->{alt}) {
+            next unless(($token->[1]->{alt} // '') =~ m/$o->{filter}->{alt}/);
+        }
+
+        push @links, URI->new($token->[1]->{src});
+    }
+
+    return @links;
+}
+
+
 1;
