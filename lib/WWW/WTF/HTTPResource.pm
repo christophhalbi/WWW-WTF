@@ -18,7 +18,7 @@ has 'content' => (
     required => 1,
 );
 
-has 'successfull' => (
+has 'successful' => (
     is       => 'ro',
     isa      => 'Bool',
     required => 1,

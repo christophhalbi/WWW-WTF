@@ -22,7 +22,7 @@ $test->run_test(sub {
             my $uri = get_uri_from_qr_code_data_uri($qr_code_data);
             my $response = $self->ua_lwp->get($uri);
 
-            $response->successfull
+            $response->successful
                 ? pass("URI in QR code is reachable: $uri")
                 : fail("Unreachable URI in QR Code found: $uri")
             ;
