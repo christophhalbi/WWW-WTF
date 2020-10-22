@@ -24,6 +24,12 @@ has 'successful' => (
     required => 1,
 );
 
+#FIXME the requested uri. this may not match the final uri after redirects
+has 'request_uri' => (
+    is       => 'ro',
+    isa      => 'URI',
+    required => 1,
+);
 
 #FIXME this is rather ugly. we need a good solution to get
 #information from a Moose::Role so they can self-register here

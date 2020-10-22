@@ -49,6 +49,7 @@ sub get {
         headers     => HTTP::Headers->new( Content_Type => $response->get_mime_type ),
         content     => $self->ua->get_html_source,
         successful  => ($response->get_status_code =~ m/^2\d\d$/ ? 1 : 0),
+        request_uri => $uri,
     );
 
     return $http_resource;
