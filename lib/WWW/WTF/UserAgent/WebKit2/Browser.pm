@@ -13,13 +13,20 @@ has 'callbacks' => (
     default => sub { {} },
 );
 
-before handle_resource_request => sub {
-    my ($self, $view, $resource, $request) = @_;
+sub init_webkit {
+    my ($self) = @_;
 
-    if (exists $self->callbacks->{handle_resource_request}) {
-        $self->callbacks->{handle_resource_request}->($view, $resource, $request);
+    $self->SUPER::init_webkit;
+
+    foreach my $callback (keys %{ $self->callbacks }) {
+
+        $self->view->signal_connect($callback => sub {
+            my ($view, $resource, $request) = @_;
+
+            $self->callbacks->{$callback}->($view, $resource, $request);
+        });
     }
-};
+}
 
 __PACKAGE__->meta->make_immutable;
 
