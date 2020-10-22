@@ -60,6 +60,8 @@ sub BUILD {
 
 sub get_links { ... }
 
+sub get_image_uris { ... }
+
 sub get_headings { ... }
 
 __PACKAGE__->meta->make_immutable;
