@@ -34,10 +34,20 @@ has 'callbacks' => (
     default => sub { {} },
 );
 
+sub get_rss_anon {
+    open my $status, '<', '/proc/self/status';
+    while (<$status>) {
+        return $1 if /RssAnon: \s* (\d+) \s* kB/xm;
+    }
+    return 0;
+}
+
 sub get {
     my ($self, $uri) = @_;
 
     confess "$uri is not an URI object" unless (ref($uri) =~ /^URI::https?$/);
+
+    my $s = get_rss_anon();
 
     $self->ua->open($uri->as_string);
 
@@ -50,6 +60,10 @@ sub get {
         content     => $self->ua->get_html_source,
         successfull => ($response->get_status_code =~ m/^2\d\d$/ ? 1 : 0),
     );
+
+    my $growth = get_rss_anon() - $s;
+
+    warn "Memory used: $growth KiB";
 
     return $http_resource;
 }
