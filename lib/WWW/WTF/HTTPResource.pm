@@ -54,6 +54,8 @@ sub BUILD {
 
 sub get_links { ... }
 
+sub get_headings { ... }
+
 __PACKAGE__->meta->make_immutable;
 
 1;

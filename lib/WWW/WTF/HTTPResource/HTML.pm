@@ -49,5 +49,16 @@ sub get_image_uris {
     return @links;
 }
 
+sub get_headings {
+    my ($self, $o) = @_;
+
+    my @headings;
+
+    while (my $token = $self->parser->get_tag(qw/h1 h2 h3 h4 h5 h6/)) {
+        push @headings, $token->[0];
+    }
+
+    return @headings;
+}
 
 1;
