@@ -5,7 +5,7 @@ use WWW::WTF::Testcase;
 my $test = WWW::WTF::Testcase->new(
     ua_webkit2 => WWW::WTF::UserAgent::WebKit2->new(
         callbacks => {
-            handle_resource_request => sub {
+            'resource-load-started' => sub {
                 my ($view, $resource, $request) = @_;
 
                 check_request($request->get_uri);
