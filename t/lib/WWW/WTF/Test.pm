@@ -39,12 +39,14 @@ has 'base_uri' => (
 has 'ua_lwp' => (
     is      => 'ro',
     isa     => 'WWW::WTF::UserAgent::LWP',
+    lazy    => 1,
     default => sub { WWW::WTF::UserAgent::LWP->new(); },
 );
 
 has 'ua_webkit2' => (
     is      => 'ro',
     isa     => 'WWW::WTF::UserAgent::WebKit2',
+    lazy    => 1,
     default => sub { WWW::WTF::UserAgent::WebKit2->new(); },
 );
 
