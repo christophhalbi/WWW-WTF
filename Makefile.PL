@@ -1,7 +1,8 @@
 use inc::Module::Install;
 
 name 'WWW-WTF';
-version '1.0';
+license 'perl';
+version '0.1';
 
 requires 'common::sense';
 requires 'Cache::FastMmap';
