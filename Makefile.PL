@@ -14,8 +14,9 @@ requires 'LWP::UserAgent';
 requires 'Moose';
 requires 'URI';
 requires 'WWW::Mechanize';
-requires 'WWW::WebKit2' => 0.127;
 requires 'XML::Simple';
+
+recommends 'WWW::WebKit2' => 0.127;
 
 test_requires 'Plack';
 test_requires 'Test2::Suite';

@@ -1,6 +1,7 @@
 use FindBin;
 use lib "$FindBin::Bin/lib";
 use Test2::V0 '!meta';
+use Test2::Require::Module 'WWW::WebKit2';
 use WWW::WTF::Test;
 
 my $test = WWW::WTF::Test->new();
