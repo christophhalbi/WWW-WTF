@@ -8,6 +8,7 @@ use URI;
 
 use WWW::WTF::UserAgent::LWP;
 use WWW::WTF::UserAgent::WebKit2;
+use WWW::WTF::Testcase::Report;
 
 use namespace::autoclean;
 
@@ -39,6 +40,15 @@ has 'ua_webkit2' => (
     lazy    => 1,
     isa     => 'WWW::WTF::UserAgent::WebKit2',
     default => sub { WWW::WTF::UserAgent::WebKit2->new(); },
+);
+
+
+#Report
+has 'report' => (
+    is      => 'ro',
+    lazy    => 1,
+    isa     => 'WWW::WTF::Testcase::Report',
+    default => sub { WWW::WTF::Testcase::Report->new(); },
 );
 
 
