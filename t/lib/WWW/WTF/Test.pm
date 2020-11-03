@@ -12,6 +12,7 @@ use URI;
 
 use WWW::WTF::UserAgent::LWP;
 use WWW::WTF::UserAgent::WebKit2;
+use WWW::WTF::UserAgent::Firefox;
 
 use namespace::autoclean;
 
@@ -50,6 +51,12 @@ has 'ua_webkit2' => (
     default => sub { WWW::WTF::UserAgent::WebKit2->new(); },
 );
 
+has 'ua_firefox' => (
+    is      => 'ro',
+    isa     => 'WWW::WTF::UserAgent::Firefox',
+    lazy    => 1,
+    default => sub { WWW::WTF::UserAgent::Firefox->new(); },
+);
 
 #Helpers
 sub uri_for {
