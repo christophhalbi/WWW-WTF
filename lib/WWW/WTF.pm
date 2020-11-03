@@ -26,6 +26,10 @@ WWW::WTF WebTestFramework - automated tests for your website
 
 WWW::WTF is a toolkit for writing automated tests on web-content. WWW::WTF supports different types of user-agents (browsers) to let you navigate through a website's content and query certain data.
 
+=head1 SEE ALSO
+
+The current development version can be found in the git repository at: https://github.com/Atikon/WWW-WTF
+
 =head1 CONTRIBUTORS
 
 christophhalbi
