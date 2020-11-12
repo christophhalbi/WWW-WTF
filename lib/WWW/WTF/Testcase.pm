@@ -3,8 +3,9 @@ use Moose;
 use common::sense;
 
 use Getopt::Long;
-
 use URI;
+
+use Test2::Tools::Subtest qw/subtest_buffered/;
 
 use WWW::WTF::UserAgent::LWP;
 use WWW::WTF::UserAgent::WebKit2;
@@ -63,6 +64,14 @@ sub run_test {
     my ($self, $test) = @_;
 
     $test->($self);
+
+    $self->report->done;
+}
+
+sub run_subtest {
+    my ($self, $name, $test) = @_;
+
+    subtest_buffered($name, $test);
 }
 
 __PACKAGE__->meta->make_immutable;

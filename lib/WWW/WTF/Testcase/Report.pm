@@ -1,30 +1,48 @@
 package WWW::WTF::Testcase::Report;
 use Moose;
 use common::sense;
-use Test2::V0 '!meta';
+use Test2::API qw/context/;
 
-sub success {
-    my ($self, $uri, $o) = @_;
+sub pass {
+    my ($self, $message, $o) = @_;
 
-    my ($package, $testcase) = caller();
+    my $ctx = context();
 
-    pass({
-        uri         => $uri,
-        testcase    => $testcase,
-    });
+    my $event = $ctx->send_ev2(
+        assert  => {
+            pass        => 1,
+            no_debug    => 1,
+            details     => "$message",
+        },
+    );
+
+    $ctx->release;
 }
 
-sub failure {
-    my ($self, $uri, $o) = @_;
+sub fail {
+    my ($self, $message, $o) = @_;
 
-    my ($package, $testcase) = caller();
+    my $ctx = context();
 
-    fail({
-        uri         => $uri,
-        testcase    => $testcase,
-    });
+    my $event = $ctx->send_ev2(
+        assert  => {
+            pass        => 0, 
+            no_debug    => 1,
+            details     => "$message",
+        },
+    );
 
+    $ctx->release;
 }
+
+sub done {
+    my ($self) = @_;
+
+    my $ctx = context();
+    $ctx->done_testing();
+    $ctx->release;
+}
+
 
 
 __PACKAGE__->meta->make_immutable;
