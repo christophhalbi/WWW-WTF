@@ -15,6 +15,7 @@ requires 'Moose';
 requires 'URI';
 requires 'WWW::Mechanize';
 requires 'XML::Simple';
+requires 'List::Util';
 
 recommends 'WWW::WebKit2' => 0.127;
 
