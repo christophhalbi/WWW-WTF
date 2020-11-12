@@ -10,6 +10,7 @@ $test->run_test(sub {
 
     while (my $http_resource = $iterator->next) {
         my $uri = $http_resource->request_uri;
+        $test->report->diag("Checking for HTTP URIs at $uri");
 
         $self->run_subtest($uri, sub {
             my %http_uris;

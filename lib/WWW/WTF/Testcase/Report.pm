@@ -35,6 +35,17 @@ sub fail {
     $ctx->release;
 }
 
+sub diag {
+    my ($self, $message, $o) = @_;
+
+    my $ctx = context();
+
+    my $event = $ctx->diag($message);
+
+    $ctx->release;
+}
+
+
 sub done {
     my ($self) = @_;
 
