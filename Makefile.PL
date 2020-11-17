@@ -2,7 +2,7 @@ use inc::Module::Install;
 
 name 'WWW-WTF';
 license 'perl';
-version '0.2';
+version '0.4';
 
 requires 'common::sense';
 requires 'Cache::FastMmap';
