@@ -20,8 +20,6 @@ WWW::WTF WebTestFramework - automated tests for your website
 
 =head1 SYNOPSIS
 
-see exmaples
-
     yath test examples/ --jobs=4 :: --base_url=https://www.<DOMAIN>
 
 =head1 DESCRIPTION
