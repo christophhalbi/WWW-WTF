@@ -1,4 +1,4 @@
-package WWW::WTF::HTTPResource::HTML;
+package WWW::WTF::HTTPResource::Types::HTML;
 
 use common::sense;
 
@@ -12,7 +12,7 @@ has 'parser' => (
     lazy    => 1,
     default => sub {
         my ($self) = @_;
-        my $parser = HTML::TokeParser->new(\$self->content) or die "Can't parse: $!";
+        my $parser = HTML::TokeParser->new(\$self->content->data) or die "Can't parse: $!";
         return $parser;
     },
 );
