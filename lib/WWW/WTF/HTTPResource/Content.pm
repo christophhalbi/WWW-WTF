@@ -1,4 +1,4 @@
-package WWW::WTF::HTTPResource::Helpers::Content;
+package WWW::WTF::HTTPResource::Content;
 
 use common::sense;
 
@@ -6,18 +6,25 @@ use Moose;
 
 use Test::LongString qw//;
 
-has 'content' => (
+use overload
+    '""' => 'stringify';
+
+has 'data' => (
     is       => 'ro',
     isa      => 'Str',
     required => 1,
 );
+
+sub stringify {
+    return shift->data;
+}
 
 sub contains_string {
     my ($self, $str, $description) = @_;
 
     $description = qq{Content contains "$str"} if not defined $description;
 
-    return Test::LongString::contains_string($self->content, $str, $description);
+    return Test::LongString::contains_string($self->data, $str, $description);
 }
 
 sub contains_regex {
@@ -25,7 +32,7 @@ sub contains_regex {
 
     $description = qq{Content is like "$regex"} if not defined $description;
 
-    return Test::LongString::like_string($self->content, $regex, $description);
+    return Test::LongString::like_string($self->data, $regex, $description);
 }
 
 sub lacks_string {
@@ -33,7 +40,7 @@ sub lacks_string {
 
     $description = qq{Content lacks "$str"} if not defined $description;
 
-    return Test::LongString::lacks_string($self->content, $str, $description);
+    return Test::LongString::lacks_string($self->data, $str, $description);
 }
 
 sub lacks_regex {
@@ -41,7 +48,7 @@ sub lacks_regex {
 
     $description = qq{Content is unlike "$regex"} if not defined $description;
 
-    return Test::LongString::unlike_string($self->content, $regex, $description);
+    return Test::LongString::unlike_string($self->data, $regex, $description);
 }
 
 1;

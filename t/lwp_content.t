@@ -10,7 +10,7 @@ $test->run_test(sub {
 
     my $http_resource = $self->ua_lwp->get($self->uri_for('/index.html'));
 
-    my $content = $http_resource->get_content();
+    my $content = $http_resource->content();
 
     $content->contains_string('Cool', 'contains_string found Cool');
     $content->contains_regex(qr/Super/, 'contains_regex found /Super/');

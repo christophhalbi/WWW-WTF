@@ -6,8 +6,6 @@ use v5.12;
 
 use Moose;
 
-use WWW::WTF::HTTPResource::Helpers::Content;
-
 has 'headers' => (
     is       => 'ro',
     isa      => 'HTTP::Headers',
@@ -16,7 +14,7 @@ has 'headers' => (
 
 has 'content' => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => 'WWW::WTF::HTTPResource::Content',
     required => 1,
 );
 
@@ -57,7 +55,7 @@ sub BUILD {
     die("Unsupported content type $content_type")
         unless exists $self->content_types->{$content_type};
 
-    Moose::Util::apply_all_roles($self, 'WWW::WTF::HTTPResource::' . $self->content_types->{$content_type});
+    Moose::Util::apply_all_roles($self, 'WWW::WTF::HTTPResource::Types::' . $self->content_types->{$content_type});
 }
 
 sub get_links { ... }
@@ -65,12 +63,6 @@ sub get_links { ... }
 sub get_image_uris { ... }
 
 sub get_headings { ... }
-
-sub get_content {
-    my $self = shift;
-
-    return WWW::WTF::HTTPResource::Helpers::Content->new( content => $self->content );
-}
 
 __PACKAGE__->meta->make_immutable;
 
