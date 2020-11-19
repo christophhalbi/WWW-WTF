@@ -6,6 +6,8 @@ use v5.12;
 
 use Moose;
 
+use WWW::WTF::HTTPResource::Helpers::Content;
+
 has 'headers' => (
     is       => 'ro',
     isa      => 'HTTP::Headers',
@@ -63,6 +65,12 @@ sub get_links { ... }
 sub get_image_uris { ... }
 
 sub get_headings { ... }
+
+sub get_content {
+    my $self = shift;
+
+    return WWW::WTF::HTTPResource::Helpers::Content->new( content => $self->content );
+}
 
 __PACKAGE__->meta->make_immutable;
 
