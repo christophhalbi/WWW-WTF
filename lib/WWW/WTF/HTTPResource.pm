@@ -43,6 +43,7 @@ has 'content_types' => (
             'text/plain'        => 'Plaintext',
             'text/xml'          => 'XML',
             'application/xml'   => 'XML',
+            'application/pdf'   => 'PDF',
         }
     },
 );
@@ -63,6 +64,8 @@ sub get_links { ... }
 sub get_image_uris { ... }
 
 sub get_headings { ... }
+
+sub get_images { ... }
 
 __PACKAGE__->meta->make_immutable;
 
