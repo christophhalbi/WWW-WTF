@@ -18,6 +18,12 @@ has 'content' => (
     required => 1,
 );
 
+has 'redirects' => (
+    is       => 'ro',
+    isa      => 'Maybe[ArrayRef]',
+    required => 0,
+);
+
 has 'successful' => (
     is       => 'ro',
     isa      => 'Bool',
@@ -63,6 +69,12 @@ sub get_links { ... }
 sub get_image_uris { ... }
 
 sub get_headings { ... }
+
+sub has_redirects {
+    my ($self) = @_;
+    return (@{ $self->redirects } > 0 ? 1 : 0);
+}
+
 
 __PACKAGE__->meta->make_immutable;
 
