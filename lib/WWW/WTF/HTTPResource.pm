@@ -49,6 +49,7 @@ has 'content_types' => (
             'text/plain'        => 'Plaintext',
             'text/xml'          => 'XML',
             'application/xml'   => 'XML',
+            'application/pdf'   => 'PDF',
         }
     },
 );
@@ -70,11 +71,12 @@ sub get_image_uris { ... }
 
 sub get_headings { ... }
 
+sub get_images { ... }
+
 sub has_redirects {
     my ($self) = @_;
     return (@{ $self->redirects } > 0 ? 1 : 0);
 }
-
 
 __PACKAGE__->meta->make_immutable;
 
