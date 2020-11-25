@@ -7,15 +7,27 @@ use Moose::Role;
 use HTML::TokeParser;
 
 has 'parser' => (
-    is      => 'ro',
+    is      => 'rw',
     isa     => 'HTML::TokeParser',
     lazy    => 1,
-    default => sub {
-        my ($self) = @_;
-        my $parser = HTML::TokeParser->new(\$self->content->data) or die "Can't parse: $!";
-        return $parser;
-    },
+    builder => 'parse_content',
 );
+
+sub parse_content {
+    my ($self) = @_;
+
+    my $parser = HTML::TokeParser->new(doc => \$self->content) or die "Can't parse: $!";
+
+    return $parser;
+}
+
+sub reset_parser {
+    my ($self) = @_;
+
+    $self->parser(
+        $self->parse_content
+    );
+}
 
 sub get_a_tags {
     my ($self, $o) = @_;
@@ -41,6 +53,8 @@ sub get_a_tags {
 
     }
 
+    $self->reset_parser;
+
     return @tags;
 }
 
@@ -60,6 +74,8 @@ sub get_links {
         push @links, URI->new($token->[1]->{href});
     }
 
+    $self->reset_parser;
+
     return @links;
 }
 
@@ -76,6 +92,8 @@ sub get_image_uris {
         push @links, URI->new($token->[1]->{src});
     }
 
+    $self->reset_parser;
+
     return @links;
 }
 
@@ -87,6 +105,8 @@ sub get_headings {
     while (my $token = $self->parser->get_tag(qw/h1 h2 h3 h4 h5 h6/)) {
         push @headings, $token->[0];
     }
+
+    $self->reset_parser;
 
     return @headings;
 }
