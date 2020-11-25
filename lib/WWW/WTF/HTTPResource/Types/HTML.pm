@@ -49,6 +49,17 @@ sub get_a_tags {
             next if ($href_uri =~ m/$base_uri/);
         }
 
+        if (exists $o->{filter}->{title}) {
+            next unless(($token->[1]->{title} // '') =~ m/$o->{filter}->{title}/i);
+        }
+
+        if (exists $o->{filter}->{href}) {
+            next unless(($token->[1]->{href} // '') =~ m/$o->{filter}->{href}/i);
+        }
+
+        my $text = $self->parser->get_trimmed_text('/a');
+        $token->[4] = $text; # add content
+
         push @tags, $token;
 
     }
@@ -63,14 +74,7 @@ sub get_links {
 
     my @links;
 
-    foreach my $token ($self->get_a_tags) {
-        if (exists $o->{filter}->{title}) {
-            next unless (($token->[1]->{title} // '') =~ m/$o->{filter}->{title}/i);
-        }
-        elsif (exists $o->{filter}->{href_regex}) {
-            next unless (($token->[1]->{href}  // '') =~ $o->{filter}->{href_regex});
-        }
-
+    foreach my $token ($self->get_a_tags($o)) {
         push @links, URI->new($token->[1]->{href});
     }
 
