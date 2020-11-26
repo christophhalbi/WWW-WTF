@@ -16,8 +16,10 @@ $test->run_test(sub {
 
         my @pdf_uris = $http_resource->get_links({
             filter => {
-                href_regex => qr/.pdf$/,
-            }
+                attributes => {
+                    href => qr/.pdf$/,
+                },
+            },
         });
 
         if (scalar @pdf_uris) {
