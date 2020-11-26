@@ -6,11 +6,26 @@ use Moose::Role;
 
 use HTML::TokeParser;
 
+use WWW::WTF::HTTPResource::Types::HTML::Tag;
+use WWW::WTF::HTTPResource::Types::HTML::Tag::Attribute;
+
 has 'parser' => (
     is      => 'rw',
     isa     => 'HTML::TokeParser',
     lazy    => 1,
     builder => 'parse_content',
+);
+
+has 'tags_without_content' => (
+    is       => 'ro',
+    isa      => 'HashRef',
+    required => 1,
+    default  => sub {
+        {
+            'meta' => 1,
+            'img'  => 1,
+        }
+    },
 );
 
 sub parse_content {
@@ -29,69 +44,69 @@ sub reset_parser {
     );
 }
 
-sub get_a_tags {
-    my ($self, $o) = @_;
+sub tag {
+    my ($self, $tag, $o) = @_;
+
+    my @search_tag = ref $tag ? @$tag : $tag;
 
     my @tags;
 
-    while (my $token = $self->parser->get_tag(qw/a/)) {
+    while (my $token = $self->parser->get_tag(@search_tag)) {
+
         next if $self->filtered($o, $token);
 
-        my $text = $self->parser->get_trimmed_text('/a');
-        $token->[4] = $text; # add content
+        my $content = '';
 
-        push @tags, $token;
+        unless (exists $self->tags_without_content->{lc($token->[0])}) {
+            $content = $self->parser->get_trimmed_text(map { "/$_" } @search_tag);
+        }
+
+        # get all we need from current parser (HTML::TokeParser) here and pass it to objects
+        my $tag = WWW::WTF::HTTPResource::Types::HTML::Tag->new(
+            name       => $token->[0],
+            content    => $content,
+            attributes => [
+                map {
+                    WWW::WTF::HTTPResource::Types::HTML::Tag::Attribute->new(
+                        name    => $_,
+                        content => $token->[1]->{$_},
+                    ),
+                } keys %{ $token->[1] }
+            ],
+        );
+
+        push @tags, $tag;
     }
 
     $self->reset_parser;
 
+    return $tags[0] if scalar @tags == 1;
+
     return @tags;
+}
+
+sub get_a_tags {
+    my ($self, $o) = @_;
+
+    return $self->tag([qw/a/], $o);
 }
 
 sub get_links {
     my ($self, $o) = @_;
 
-    my @links;
-
-    foreach my $token ($self->get_a_tags($o)) {
-        push @links, URI->new($token->[1]->{href});
-    }
-
-    $self->reset_parser;
-
-    return @links;
+    return $self->get_a_tags($o);
 }
 
 sub get_image_uris {
     my ($self, $o) = @_;
 
-    my @links;
-
-    while (my $token = $self->parser->get_tag(qw/img/)) {
-        next if $self->filtered($o, $token);
-
-        push @links, URI->new($token->[1]->{src});
-    }
-
-    $self->reset_parser;
-
-    return @links;
+    return $self->tag([qw/img/], $o);
 }
 
 sub get_headings {
     my ($self, $o) = @_;
 
-    my @headings;
-
-    while (my $token = $self->parser->get_tag(qw/h1 h2 h3 h4 h5 h6/)) {
-        next if $self->filtered($o, $token);
-
-        push @headings, $token->[0];
-    }
-
-    $self->reset_parser;
-
-    return @headings;
+    return $self->tag([qw/h1 h2 h3 h4 h5 h6/], $o);
 }
 
 sub filtered {
