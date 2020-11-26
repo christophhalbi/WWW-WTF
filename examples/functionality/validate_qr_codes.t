@@ -16,8 +16,10 @@ $test->run_test(sub {
         $self->run_subtest($uri, sub {
             my @qr_code_uris = $http_resource->get_image_uris({
                 filter => {
-                    alt => 'QR\-Code',
-                }
+                    attributes => {
+                        alt => 'QR\-Code',
+                    },
+                },
             });
 
             foreach my $qr_code_data (@qr_code_uris) {
