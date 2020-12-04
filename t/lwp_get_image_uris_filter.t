@@ -18,7 +18,7 @@ $test->run_test(sub {
     });
 
     is(scalar @image_uris, 1);
-    is($image_uris[0], '/img2.jpg');
+    is($image_uris[0]->src->as_string, '/img2.jpg');
 });
 
 done_testing();

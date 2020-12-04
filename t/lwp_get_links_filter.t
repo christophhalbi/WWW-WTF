@@ -18,7 +18,7 @@ $test->run_test(sub {
     });
 
     is(scalar @links, 1);
-    is($links[0], '/foo.html');
+    is($links[0]->uri->as_string, '/foo.html');
 
     @links = $http_resource->get_links({
         filter => {
@@ -30,7 +30,7 @@ $test->run_test(sub {
     });
 
     is(scalar @links, 1);
-    is($links[0], '/foo.html', 'combine filters');
+    is($links[0]->uri->as_string, '/foo.html', 'combine filters');
 
     @links = $http_resource->get_links({
         filter => {
@@ -53,7 +53,7 @@ $test->run_test(sub {
     });
 
     is(scalar @links_pdf, 1);
-    is($links_pdf[0], '/letter.pdf');
+    is($links_pdf[0]->uri->as_string, '/letter.pdf');
 });
 
 done_testing();

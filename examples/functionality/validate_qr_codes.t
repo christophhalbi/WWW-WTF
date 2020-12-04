@@ -23,7 +23,7 @@ $test->run_test(sub {
             });
 
             foreach my $qr_code_data (@qr_code_uris) {
-                my $qr_code_uri = get_uri_from_qr_code_data_uri($qr_code_data);
+                my $qr_code_uri = get_uri_from_qr_code_data_uri($qr_code_data->src);
                 my $response = $self->ua_lwp->get($qr_code_uri);
 
                 $response->successful
