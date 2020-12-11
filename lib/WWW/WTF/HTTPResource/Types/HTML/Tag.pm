@@ -18,6 +18,11 @@ has 'content' => (
     isa => 'Str',
 );
 
+has 'line' => (
+    is  => 'ro',
+    isa => 'Int',
+);
+
 has 'tag_types' => (
     is       => 'ro',
     isa      => 'HashRef',
