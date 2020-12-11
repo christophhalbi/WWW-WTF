@@ -14,8 +14,13 @@ has 'name' => (
 );
 
 has 'content' => (
+    is          => 'ro',
+    isa         => 'Str',
+);
+
+has 'line' => (
     is  => 'ro',
-    isa => 'Str',
+    isa => 'Int',
 );
 
 has 'tag_types' => (
@@ -26,6 +31,12 @@ has 'tag_types' => (
         {
             'a'   => 'A',
             'img' => 'Img',
+            'h1'  => 'H',
+            'h2'  => 'H',
+            'h3'  => 'H',
+            'h4'  => 'H',
+            'h5'  => 'H',
+            'h6'  => 'H',
         }
     },
 );
@@ -48,7 +59,11 @@ sub BUILD {
 sub attribute {
     my ($self, $name) = @_;
 
-    return first { $_->name eq $name } @{ $self->attributes };
+    my $attribute = first { $_->name eq $name } @{ $self->attributes };
+
+    return defined $attribute
+        ? $attribute
+        : WWW::WTF::HTTPResource::Types::HTML::Tag::Attribute->new( name => 'undef', content => '', exists => 0 );
 }
 
 sub contains_string {

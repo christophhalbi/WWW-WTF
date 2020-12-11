@@ -4,14 +4,13 @@ use common::sense;
 
 use Moose::Role;
 
-use HTML::TokeParser;
-
+use WWW::WTF::HTTPResource::Types::HTML::Parser;
 use WWW::WTF::HTTPResource::Types::HTML::Tag;
 use WWW::WTF::HTTPResource::Types::HTML::Tag::Attribute;
 
 has 'parser' => (
     is      => 'rw',
-    isa     => 'HTML::TokeParser',
+    isa     => 'WWW::WTF::HTTPResource::Types::HTML::Parser',
     lazy    => 1,
     builder => 'parse_content',
 );
@@ -31,7 +30,7 @@ has 'tags_without_content' => (
 sub parse_content {
     my ($self) = @_;
 
-    my $parser = HTML::TokeParser->new(doc => \$self->content) or die "Can't parse: $!";
+    my $parser = WWW::WTF::HTTPResource::Types::HTML::Parser->new(doc => \$self->content) or die "Can't parse: $!";
 
     return $parser;
 }
@@ -65,6 +64,7 @@ sub tag {
         my $tag = WWW::WTF::HTTPResource::Types::HTML::Tag->new(
             name       => $token->[0],
             content    => $content,
+            line       => $token->[4],
             attributes => [
                 map {
                     WWW::WTF::HTTPResource::Types::HTML::Tag::Attribute->new(
