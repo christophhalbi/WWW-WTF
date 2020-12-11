@@ -22,6 +22,8 @@ requires 'URI';
 requires 'Test::LongString';
 requires 'WWW::Mechanize';
 requires 'XML::Simple';
+requires 'Config::Merged';
+requires 'Getopt::Long';
 
 requires_external_bin 'pdfimages';
 requires_external_bin 'zbarimg';
