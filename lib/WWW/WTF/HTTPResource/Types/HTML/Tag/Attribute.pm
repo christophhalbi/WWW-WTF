@@ -17,6 +17,12 @@ has 'content' => (
     isa => 'Str',
 );
 
+has 'exists' => (
+    is       => 'ro',
+    isa      => 'Bool',
+    default  => sub { 1; },
+);
+
 sub contains_string {
     my ($self, $str, $description) = @_;
 
