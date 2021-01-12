@@ -7,6 +7,7 @@ use Moose;
 use HTTP::Headers;
 
 use WWW::WTF::HTTPResource;
+use WWW::WTF::HTTPResource::Content;
 use WWW::WTF::UserAgent::WebKit2::Browser;
 use WWW::WTF::UserAgent::WebKit2::Iterator;
 
@@ -47,7 +48,7 @@ sub get {
 
     my $http_resource = WWW::WTF::HTTPResource->new(
         headers     => HTTP::Headers->new( Content_Type => $response->get_mime_type ),
-        content     => $self->ua->get_html_source,
+        content     => WWW::WTF::HTTPResource::Content->new( data => $self->ua->get_html_source ),
         successful  => ($response->get_status_code =~ m/^2\d\d$/ ? 1 : 0),
         request_uri => $uri,
     );
@@ -61,6 +62,19 @@ sub recurse {
     confess "$sitemap_uri is not an URI object" unless (ref($sitemap_uri) =~ /^URI::https?$/);
 
     return WWW::WTF::UserAgent::WebKit2::Iterator->new( sitemap_uri => $sitemap_uri, ua => $self );
+}
+
+sub set_cookie_policy {
+    my ($self, $policy) = @_;
+
+    #for further expansion
+    die('invalid cookie policy') unless ($policy eq 'accept_all');
+
+    #'hack' to accept third-party cookies
+    $self->ua->view
+        ->get_website_data_manager
+        ->get_cookie_manager
+        ->set_accept_policy('WEBKIT_COOKIE_POLICY_ACCEPT_ALWAYS');
 }
 
 __PACKAGE__->meta->make_immutable;

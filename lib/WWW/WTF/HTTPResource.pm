@@ -14,8 +14,14 @@ has 'headers' => (
 
 has 'content' => (
     is       => 'ro',
-    isa      => 'Str',
+    isa      => 'WWW::WTF::HTTPResource::Content',
     required => 1,
+);
+
+has 'redirects' => (
+    is       => 'ro',
+    isa      => 'Maybe[ArrayRef]',
+    required => 0,
 );
 
 has 'successful' => (
@@ -43,6 +49,7 @@ has 'content_types' => (
             'text/plain'        => 'Plaintext',
             'text/xml'          => 'XML',
             'application/xml'   => 'XML',
+            'application/pdf'   => 'PDF',
         }
     },
 );
@@ -55,7 +62,7 @@ sub BUILD {
     die("Unsupported content type $content_type")
         unless exists $self->content_types->{$content_type};
 
-    Moose::Util::apply_all_roles($self, 'WWW::WTF::HTTPResource::' . $self->content_types->{$content_type});
+    Moose::Util::apply_all_roles($self, 'WWW::WTF::HTTPResource::Types::' . $self->content_types->{$content_type});
 }
 
 sub get_links { ... }
@@ -63,6 +70,13 @@ sub get_links { ... }
 sub get_image_uris { ... }
 
 sub get_headings { ... }
+
+sub get_images { ... }
+
+sub has_redirects {
+    my ($self) = @_;
+    return (@{ $self->redirects } > 0 ? 1 : 0);
+}
 
 __PACKAGE__->meta->make_immutable;
 

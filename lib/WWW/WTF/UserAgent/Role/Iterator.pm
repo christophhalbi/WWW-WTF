@@ -5,7 +5,7 @@ use common::sense;
 use v5.12;
 
 use Moose::Role;
-
+use List::Util qw/ uniq /;
 use XML::Simple;
 
 has 'sitemap_uri' => (
@@ -26,9 +26,9 @@ sub BUILD {
 
     my $http_resource = $self->ua->get($self->sitemap_uri);
 
-    my $data = XMLin($http_resource->content);
+    my $data = XMLin($http_resource->content->data);
 
-    push @{ $self->locations }, URI->new($_->{loc}) foreach @{ $data->{url} };
+    push @{ $self->locations }, URI->new($_->{loc}) foreach uniq(@{ $data->{url} });
 }
 
 sub next {
